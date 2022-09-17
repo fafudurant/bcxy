@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.byk.ggkt.vod.mapper.CourseMapper">
+    <!--根据课程id查询课程详情 CourseVo selectCourseVoById(Long courseId);-->
+    <select id="selectCourseVoById" resultType="com.byk.ggkt.vo.vod.CourseVo">
+        SELECT
+            c.id,
+            c.title,
+            c.lesson_num AS lessonNum,
+            c.price,
+            c.cover,
+            c.buy_count AS buyCount,
+            c.view_count AS viewCount,
+            c.status,
+            c.publish_time AS publishTime,
+            c.teacher_id as teacherId,
+            t.name AS teacherName,
+            s1.title AS subjectParentTitle,
+            s2.title AS subjectTitle
+        FROM
+        <include refid="tables"></include>
+        WHERE c.id=#{id}
+    </select>
+
+    <!-- 根据课程id查询发布课程信息 CoursePublishVo selectCoursePublishVoById(Long id);-->
+    <select id="selectCoursePublishVoById" resultType="com.byk.ggkt.vo.vod.CoursePublishVo">
+        SELECT
+            c.id,
+            c.title,
+            c.cover,
+            c.lesson_num AS lessonNum,
+            c.price,
+            t.name AS teacherName,
+            s1.title AS subjectParentTitle,
+            s2.title AS subjectTitle
+        FROM
+        <include refid="tables"></include>
+        WHERE c.id=#{id}
+    </select>
+
+    <sql id="tables">
+        course c
+        LEFT OUTER JOIN teacher t ON c.teacher_id=t.id
+        LEFT OUTER JOIN `subject` s1 ON c.subject_parent_id=s1.id
+        LEFT OUTER JOIN `subject` s2 ON c.subject_id=s2.id
+    </sql>
+</mapper>
